@@ -168,7 +168,7 @@ Please ensure you have added your API key to the script section of this file to 
         /* --- CONFIGURATION --- */
         // 1. Get your key from https://aistudio.google.com/
         // 2. Paste it between the quotes below:
-        const API_KEY = 'YOUR_API_KEY_HERE';
+        const API_KEY = AIzaSyBeNOz9FkqW1WIr80SAAk8dQWOoPJqTDCM;
 
         const CONTEXT = `
         SULTANATE OF OMAN - STANDARD CONTRACT FOR BUILDING AND CIVIL ENGINEERING WORKS (May 2019)
@@ -190,7 +190,7 @@ Please ensure you have added your API key to the script section of this file to 
             const status = document.getElementById('status');
 
             // Check if API Key is set
-            if (API_KEY === 'YOUR_API_KEY_HERE') {
+            if (API_KEY === AIzaSyBeNOz9FkqW1WIr80SAAk8dQWOoPJqTDCM) {
                 status.textContent = 'Key Required';
                 status.className = 'badge';
             } else {
@@ -208,7 +208,7 @@ Please ensure you have added your API key to the script section of this file to 
             }
 
             async function askGemini(q) {
-                if (API_KEY === 'YOUR_API_KEY_HERE') {
+                if (API_KEY === AIzaSyBeNOz9FkqW1WIr80SAAk8dQWOoPJqTDCM) {
                     return "⚠️ Error: Please add your Gemini API Key to the index.html file.";
                 }
                 
