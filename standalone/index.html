@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oman Contract Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                </div>
+                <div class="title">
+                    <h1>Oman Contract Assistant</h1>
+                    <p>Standard Contract (May 2019)</p>
+                </div>
+            </div>
+        </header>
+
+        <main id="chat-messages">
+            <div class="message assistant">
+                <div class="avatar">AI</div>
+                <div class="bubble">
+                    Hello! I am your AI Assistant for the Sultanate of Oman Standard Contract for Building and Civil Engineering Works (May 2019). How can I help you today?
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="input-wrapper">
+                <input type="text" id="user-input" placeholder="Ask a question about the contract..." autocomplete="off">
+                <button id="send-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </div>
+            <p class="disclaimer">This assistant uses AI to interpret the Oman Standard Contract. Always verify with official documents.</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
