@@ -1,4 +1,4 @@
-const GEMINI_API_KEY = 'YOUR_API_KEY_HERE';
+const GEMINI_API_KEY = AIzaSyBeNOz9FkqW1WIr80SAAk8dQWOoPJqTDCM;
 
 const CONTRACT_CONTEXT = `
 SULTANATE OF OMAN
@@ -94,7 +94,7 @@ function removeLoading() {
 }
 
 async function askGemini(question) {
-    if (GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
+    if (GEMINI_API_KEY === AIzaSyBeNOz9FkqW1WIr80SAAk8dQWOoPJqTDCM) {
         return "Please add your Gemini API Key to script.js to start using the assistant.";
     }
 
