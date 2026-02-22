@@ -7,15 +7,14 @@
     <style>
         /* --- STYLES --- */
         :root {
-            --bg: #f1f5f9;
+            --bg: #f8fafc;
             --card: #ffffff;
             --primary: #059669;
             --primary-dark: #047857;
-            --text: #1e293b;
+            --text: #0f172a;
             --text-light: #64748b;
             --border: #e2e8f0;
             --user-msg: #059669;
-            --ai-msg: #f8fafc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,7 +40,7 @@
         }
 
         header {
-            padding: 1.25rem 1.5rem;
+            padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -49,12 +48,12 @@
             background: white;
         }
 
-        .brand { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+        .brand { display: flex; align-items: center; gap: 0.75rem; }
         .icon { 
             background: var(--primary); 
             color: white; 
-            width: 40px; 
-            height: 40px; 
+            width: 36px; 
+            height: 36px; 
             border-radius: 8px; 
             display: flex; 
             align-items: center; 
@@ -62,12 +61,12 @@
             font-weight: bold;
         }
 
-        .title h1 { font-size: 1.1rem; font-weight: 700; }
-        .title p { font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; }
+        .title h1 { font-size: 1rem; font-weight: 700; }
+        .title p { font-size: 0.65rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; }
 
         .badge {
             font-size: 0.65rem;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 99px;
             background: #fee2e2;
             color: #991b1b;
@@ -85,16 +84,17 @@
             background: #f8fafc;
         }
 
-        .msg { display: flex; gap: 0.75rem; max-width: 85%; align-items: flex-start; }
+        .msg { display: flex; gap: 0.75rem; max-width: 85%; }
         .msg.user { align-self: flex-end; flex-direction: row-reverse; }
 
         .bubble {
-            padding: 0.75rem 1rem;
+            padding: 0.8rem 1rem;
             border-radius: 1rem;
             font-size: 0.95rem;
             line-height: 1.5;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .user .bubble { background: var(--user-msg); color: white; border-top-right-radius: 0; }
@@ -110,14 +110,15 @@
             border-radius: 0.75rem;
             font-size: 0.95rem;
             outline: none;
+            background: #fcfcfc;
         }
-        input:focus { border-color: var(--primary); }
+        input:focus { border-color: var(--primary); background: white; }
 
         button {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0 1.25rem;
+            padding: 0 1.5rem;
             border-radius: 0.75rem;
             font-weight: 600;
             cursor: pointer;
@@ -130,52 +131,36 @@
         .dot { width: 6px; height: 6px; background: #cbd5e1; border-radius: 50%; animation: b 1.4s infinite; }
         @keyframes b { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        #debug {
-            display: none;
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            right: 20px;
-            background: #1e293b;
-            color: #4ade80;
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.7rem;
-            max-height: 200px;
-            overflow: auto;
-            z-index: 100;
-        }
+        .disclaimer { font-size: 0.65rem; color: var(--text-light); text-align: center; margin-top: 0.75rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="brand" onclick="toggleDebug()">
+            <div class="brand">
                 <div class="icon">OM</div>
                 <div class="title">
                     <h1>Oman Contract AI</h1>
                     <p>Standard Contract 2019</p>
                 </div>
             </div>
-            <div id="status" class="badge">Key Required</div>
+            <div id="status" class="badge">Checking...</div>
         </header>
 
         <main id="chat">
             <div class="msg ai">
-                <div class="bubble">Welcome. I can help you with questions about the Sultanate of Oman Standard Contract for Building and Civil Engineering Works (May 2019).
+                <div class="bubble">Hello! I am your AI Assistant for the Sultanate of Oman Standard Contract for Building and Civil Engineering Works (May 2019). 
 
-Please ensure your Gemini API Key is added to the script section of this file.</div>
+Please ensure you have added your API key to the script section of this file to begin.</div>
             </div>
         </main>
-
-        <div id="debug">--- System Logs ---<br></div>
 
         <footer>
             <div class="input-box">
                 <input type="text" id="input" placeholder="Ask a question..." autocomplete="off">
-                <button id="send">Send</button>
+                <button id="send-btn">Send</button>
             </div>
+            <p class="disclaimer">Always verify AI responses with the official legal document.</p>
         </footer>
     </div>
 
@@ -198,88 +183,90 @@ Please ensure your Gemini API Key is added to the script section of this file.</
         `;
 
         /* --- LOGIC --- */
-        const chat = document.getElementById('chat');
-        const input = document.getElementById('input');
-        const send = document.getElementById('send');
-        const status = document.getElementById('status');
-        const debug = document.getElementById('debug');
+        document.addEventListener('DOMContentLoaded', () => {
+            const chat = document.getElementById('chat');
+            const input = document.getElementById('input');
+            const sendBtn = document.getElementById('send-btn');
+            const status = document.getElementById('status');
 
-        function log(msg) {
-            debug.innerHTML += `> ${msg}<br>`;
-            debug.scrollTop = debug.scrollHeight;
-        }
-
-        function toggleDebug() {
-            debug.style.display = debug.style.display === 'block' ? 'none' : 'block';
-        }
-
-        if (API_KEY !== 'YOUR_API_KEY_HERE') {
-            status.textContent = 'Ready';
-            status.className = 'badge ok';
-            log('API Key detected.');
-        } else {
-            log('Warning: API Key is missing.');
-        }
-
-        function addMsg(role, text) {
-            const d = document.createElement('div');
-            d.className = `msg ${role}`;
-            d.innerHTML = `<div class="bubble">${text}</div>`;
-            chat.appendChild(d);
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        async function ask(q) {
-            if (API_KEY === 'YOUR_API_KEY_HERE') return "Please add your API Key to the index.html file to use the assistant.";
-            
-            log(`Sending request to Gemini...`);
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-            
-            try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `Context: ${CONTEXT}\n\nUser: ${q}\n\nAssistant: Answer based ONLY on the context above. If not found, say you don't know.` }] }]
-                    })
-                });
-                const data = await res.json();
-                log(`Response received.`);
-                if (data.error) return `Error: ${data.error.message}`;
-                return data.candidates[0].content.parts[0].text;
-            } catch (e) {
-                log(`Fetch error: ${e.message}`);
-                return "Connection error. Check your key and internet.";
+            // Check if API Key is set
+            if (API_KEY === 'YOUR_API_KEY_HERE') {
+                status.textContent = 'Key Required';
+                status.className = 'badge';
+            } else {
+                status.textContent = 'Online';
+                status.className = 'badge ok';
+                addMsg('ai', '✅ Assistant is online and ready. How can I help you with the contract today?');
             }
-        }
 
-        async function handle() {
-            const val = input.value.trim();
-            if (!val) return;
-            
-            addMsg('user', val);
-            input.value = '';
-            input.disabled = true;
-            send.disabled = true;
+            function addMsg(role, text) {
+                const d = document.createElement('div');
+                d.className = `msg ${role}`;
+                d.innerHTML = `<div class="bubble">${text}</div>`;
+                chat.appendChild(d);
+                chat.scrollTop = chat.scrollHeight;
+            }
 
-            const loading = document.createElement('div');
-            loading.className = 'msg ai';
-            loading.innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
-            chat.appendChild(loading);
-            chat.scrollTop = chat.scrollHeight;
+            async function askGemini(q) {
+                if (API_KEY === 'YOUR_API_KEY_HERE') {
+                    return "⚠️ Error: Please add your Gemini API Key to the index.html file.";
+                }
+                
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: `You are an expert on the Oman Standard Contract 2019. Context: ${CONTEXT}\n\nUser Question: ${q}\n\nAssistant: Answer based ONLY on the context. If not found, say you don't know.` }] }]
+                        })
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (data.error) {
+                        return `❌ API Error: ${data.error.message}`;
+                    }
+                    
+                    return data.candidates[0].content.parts[0].text;
+                } catch (e) {
+                    return "❌ Connection error. Please check your internet and API key.";
+                }
+            }
 
-            const reply = await ask(val);
-            loading.remove();
-            addMsg('ai', reply);
+            async function handleSend() {
+                const val = input.value.trim();
+                if (!val || sendBtn.disabled) return;
+                
+                addMsg('user', val);
+                input.value = '';
+                input.disabled = true;
+                sendBtn.disabled = true;
 
-            input.disabled = false;
-            send.disabled = false;
+                const loading = document.createElement('div');
+                loading.className = 'msg ai';
+                loading.innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+                chat.appendChild(loading);
+                chat.scrollTop = chat.scrollHeight;
+
+                const reply = await askGemini(val);
+                loading.remove();
+                addMsg('ai', reply);
+
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+            }
+
+            // Attach events
+            sendBtn.addEventListener('click', handleSend);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSend();
+            });
+
             input.focus();
-        }
-
-        send.onclick = handle;
-        input.onkeypress = (e) => { if(e.key === 'Enter') handle(); };
-        log('System initialized.');
+        });
     </script>
 </body>
 </html>
