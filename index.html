@@ -137,21 +137,21 @@
 <body>
     <div class="container">
         <header>
-            <div class="brand">
+            <div class="brand" onclick="testConnection()">
                 <div class="icon">OM</div>
                 <div class="title">
                     <h1>Oman Contract AI</h1>
                     <p>Standard Contract 2019</p>
                 </div>
             </div>
-            <div id="status" class="badge">Checking...</div>
+            <div id="status" class="badge" onclick="testConnection()">Checking...</div>
         </header>
 
         <main id="chat">
             <div class="msg ai">
                 <div class="bubble">Hello! I am your AI Assistant for the Sultanate of Oman Standard Contract for Building and Civil Engineering Works (May 2019). 
 
-Please ensure you have added your API key to the script section of this file to begin.</div>
+If you encounter errors, click the title or the status badge to run a connection test.</div>
             </div>
         </main>
 
@@ -207,12 +207,31 @@ Please ensure you have added your API key to the script section of this file to 
                 chat.scrollTop = chat.scrollHeight;
             }
 
+            window.testConnection = async () => {
+                addMsg('ai', '🔍 Running connection test...');
+                const url = `https://generativelanguage.googleapis.com/v1/models?key=${API_KEY}`;
+                try {
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    if (data.models) {
+                        const modelNames = data.models.map(m => m.name.split('/').pop()).join(', ');
+                        addMsg('ai', `✅ Connection Successful!\n\nAvailable Models: ${modelNames}`);
+                        status.textContent = 'Online';
+                        status.className = 'badge ok';
+                    } else {
+                        addMsg('ai', `❌ Connection Failed: ${JSON.stringify(data.error || data)}`);
+                    }
+                } catch (e) {
+                    addMsg('ai', `❌ Network Error: ${e.message}`);
+                }
+            };
+
             async function askGemini(q) {
                 if (API_KEY === 'YOUR_API_KEY_HERE') {
                     return "⚠️ Error: Please add your Gemini API Key to the index.html file.";
                 }
                 
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
                 
                 try {
                     const res = await fetch(url, {
